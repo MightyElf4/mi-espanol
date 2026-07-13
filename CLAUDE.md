@@ -1,9 +1,9 @@
 # Mi Español — Claude Co-Pilot Guide
 
 ## Supabase Access
-- Project ID: [FILL IN after creating project]
-- Project URL: [FILL IN]
-- Anon key: [FILL IN — safe to store here, RLS protects data]
+- Project ID: jrjriwnnjpykijlgrbba
+- Project URL: https://jrjriwnnjpykijlgrbba.supabase.co
+- Anon key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpyanJpd25qanB5a2lqbGdyYmJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM5NzEyMzYsImV4cCI6MjA5OTU0NzIzNn0.md5t3d1S6bRqEt4TntH04iX3DAhQBuOTXARF-_IEpeg
 - Use the Supabase MCP tool to query and write data directly
 
 ## Project Structure
