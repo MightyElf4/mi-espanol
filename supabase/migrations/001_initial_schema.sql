@@ -1,8 +1,6 @@
-create extension if not exists "uuid-ossp";
-
 create table vocab_cards (
-  id uuid primary key default uuid_generate_v4(),
-  user_id uuid references auth.users not null,
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users on delete cascade not null,
   spanish text not null,
   english text not null,
   example_sentence text,
@@ -17,8 +15,8 @@ create table vocab_cards (
 );
 
 create table grammar_exercises (
-  id uuid primary key default uuid_generate_v4(),
-  user_id uuid references auth.users not null,
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users on delete cascade not null,
   topic text not null,
   prompt text not null,
   correct_answer text not null,
@@ -27,8 +25,8 @@ create table grammar_exercises (
 );
 
 create table grammar_attempts (
-  id uuid primary key default uuid_generate_v4(),
-  user_id uuid references auth.users not null,
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users on delete cascade not null,
   exercise_id uuid references grammar_exercises not null,
   your_answer text not null,
   correct boolean not null,
@@ -36,8 +34,8 @@ create table grammar_attempts (
 );
 
 create table listening_log (
-  id uuid primary key default uuid_generate_v4(),
-  user_id uuid references auth.users not null,
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users on delete cascade not null,
   source text not null,
   date date default current_date,
   comprehension_rating integer check (comprehension_rating between 1 and 5),
@@ -47,8 +45,8 @@ create table listening_log (
 );
 
 create table reading_log (
-  id uuid primary key default uuid_generate_v4(),
-  user_id uuid references auth.users not null,
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users on delete cascade not null,
   source text not null,
   date date default current_date,
   comprehension_rating integer check (comprehension_rating between 1 and 5),
@@ -58,8 +56,8 @@ create table reading_log (
 );
 
 create table speaking_log (
-  id uuid primary key default uuid_generate_v4(),
-  user_id uuid references auth.users not null,
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users on delete cascade not null,
   date date default current_date,
   description text,
   difficulty_rating integer check (difficulty_rating between 1 and 5),
@@ -69,16 +67,16 @@ create table speaking_log (
 );
 
 create table daily_stats (
-  id uuid primary key default uuid_generate_v4(),
-  user_id uuid references auth.users not null,
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users on delete cascade not null,
   date date default current_date,
   stats_json jsonb default '{}',
   unique (user_id, date)
 );
 
 create table user_settings (
-  id uuid primary key default uuid_generate_v4(),
-  user_id uuid references auth.users not null unique,
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users on delete cascade not null unique,
   dark_mode boolean default true,
   streak_visible boolean default true,
   grammar_weak_topics text[] default '{}',
@@ -89,8 +87,9 @@ create table user_settings (
   updated_at timestamptz default now()
 );
 
+-- claude_log is written by Claude (service role) only. No RLS needed.
 create table claude_log (
-  id uuid primary key default uuid_generate_v4(),
+  id uuid primary key default gen_random_uuid(),
   action_type text not null,
   description text not null,
   affected_table text,
