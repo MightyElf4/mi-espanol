@@ -7,7 +7,7 @@
 
 ## 1. Purpose
 
-A personal Spanish learning web app for Landry Cunderhill, Peace Corps volunteer in Hojancha, Costa Rica. Current level: intermediate-mid (B1). Goal: near-fluency (B2/C1) by end of service (June 2028).
+A personal Spanish learning web app for Landry C Underhill, Peace Corps volunteer in Hojancha, Costa Rica. Current level: intermediate-mid (B1). Goal: near-fluency (B2/C1) by end of service (June 2028).
 
 Not a classroom tool — this is a personal field notebook and practice environment for someone living in immersion. Claude acts as co-pilot: adding content, analyzing performance, and evolving the app across sessions. The app grows with the learner.
 
