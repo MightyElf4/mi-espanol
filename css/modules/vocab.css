@@ -1,0 +1,116 @@
+/* Review session */
+.review-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px 24px;
+  text-align: center;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.review-word {
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.review-example {
+  font-size: 14px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+.review-answer {
+  font-size: 20px;
+  color: var(--accent);
+  margin: 16px 0 4px;
+}
+.review-progress {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+/* Rating buttons */
+.rating-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 16px;
+}
+.rating-btn {
+  padding: 12px 4px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  border: 2px solid transparent;
+}
+.rating-btn[data-rating="1"] { background: #fee2e2; color: #991b1b; }
+.rating-btn[data-rating="2"] { background: #fef3c7; color: #92400e; }
+.rating-btn[data-rating="3"] { background: #d1fae5; color: #065f46; }
+.rating-btn[data-rating="4"] { background: #dbeafe; color: #1e40af; }
+@media (prefers-color-scheme: dark) {
+  .rating-btn[data-rating="1"] { background: #450a0a; color: #fca5a5; }
+  .rating-btn[data-rating="2"] { background: #451a03; color: #fcd34d; }
+  .rating-btn[data-rating="3"] { background: #052e16; color: #86efac; }
+  .rating-btn[data-rating="4"] { background: #1e3a5f; color: #93c5fd; }
+}
+
+/* Vocab list */
+.vocab-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+}
+.vocab-item-text .spanish { font-weight: 600; }
+.vocab-item-text .english { font-size: 13px; color: var(--text-muted); }
+.vocab-item-meta { text-align: right; font-size: 12px; color: var(--text-muted); }
+
+/* Stats grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.stat-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  text-align: center;
+}
+.stat-number { font-size: 28px; font-weight: 700; color: var(--accent); }
+.stat-label { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+/* Tab bar within vocab module */
+.module-tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--bg-surface-2);
+  border-radius: var(--radius-sm);
+  padding: 4px;
+  margin-bottom: 20px;
+}
+.module-tab {
+  flex: 1;
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-align: center;
+  transition: all 0.15s;
+}
+.module-tab.active {
+  background: var(--bg);
+  color: var(--text);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
