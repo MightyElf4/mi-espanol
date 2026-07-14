@@ -133,6 +133,52 @@ async function renderSpeakingHistory(container, onAdd) {
   });
 }
 
+// ── Conversation prompts ──────────────────────────────────────────────────────
+
+async function fetchSpeakingPrompts() {
+  const userId = await getSpeakingUserId();
+  const { data, error } = await sb
+    .from('speaking_prompts')
+    .select('*')
+    .eq('user_id', userId);
+  if (error) throw error;
+  return data || [];
+}
+
+async function renderSpeakingPrompts(container) {
+  container.innerHTML = `<div class="spinner"></div>`;
+  const prompts = await fetchSpeakingPrompts();
+
+  if (prompts.length === 0) {
+    container.innerHTML = `<div class="empty-state"><h3>Sin temas</h3><p>Claude añadirá temas de conversación pronto.</p></div>`;
+    return;
+  }
+
+  const levelLabel = { beginner: 'Básico', intermediate: 'Intermedio', advanced: 'Avanzado' };
+
+  function showRandom() {
+    const p = prompts[Math.floor(Math.random() * prompts.length)];
+    container.innerHTML = `
+      <div class="card" style="margin-bottom:16px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:8px">
+          <div style="font-size:11px;color:var(--accent);font-weight:600;text-transform:uppercase;letter-spacing:0.05em">Tema de conversación</div>
+          <span style="font-size:11px;color:var(--text-muted)">${levelLabel[p.difficulty] || p.difficulty}</span>
+        </div>
+        <div style="font-size:18px;font-weight:600;line-height:1.4">${p.prompt}</div>
+        ${p.context_hint ? `<div style="font-size:13px;color:var(--text-muted);margin-top:8px;line-height:1.4">${p.context_hint}</div>` : ''}
+        ${p.target_structures && p.target_structures.length ? `
+          <div style="font-size:12px;margin-top:10px;color:var(--text-muted)">
+            Intenta usar: ${p.target_structures.map(s => `<strong>${s}</strong>`).join(' · ')}
+          </div>` : ''}
+      </div>
+      <button class="btn btn-primary" id="sp-another">Otro tema</button>
+    `;
+    document.getElementById('sp-another').addEventListener('click', showRandom);
+  }
+
+  showRandom();
+}
+
 // ── Stats ─────────────────────────────────────────────────────────────────────
 
 async function renderSpeakingStats(container) {
@@ -161,6 +207,7 @@ async function renderSpeakingModule(container) {
   const tabs = [
     { id: 'log', label: 'Registrar' },
     { id: 'history', label: 'Historial' },
+    { id: 'prompts', label: 'Temas' },
     { id: 'stats', label: 'Estadísticas' },
   ];
 
@@ -173,6 +220,8 @@ async function renderSpeakingModule(container) {
       renderSpeakingForm(tc, () => renderTab('history'));
     } else if (tabId === 'history') {
       await renderSpeakingHistory(tc, () => renderTab('log'));
+    } else if (tabId === 'prompts') {
+      await renderSpeakingPrompts(tc);
     } else if (tabId === 'stats') {
       await renderSpeakingStats(tc);
     }

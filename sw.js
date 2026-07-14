@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mi-espanol-v2';
+const CACHE_NAME = 'mi-espanol-v3';
 const BASE = '/mi-espanol';
 const SHELL_FILES = [
   BASE + '/',

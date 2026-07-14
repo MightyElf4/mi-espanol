@@ -38,6 +38,27 @@ async function fetchGrammarAttempts() {
 
 // ── Practice session ──────────────────────────────────────────────────────────
 
+// correct_answer may hold several valid forms separated by "|" (e.g. "hubiera comido|habría comido")
+function grammarAnswerIsCorrect(input, correctAnswer) {
+  const given = input.trim().toLowerCase();
+  return correctAnswer.split('|').some(a => a.trim().toLowerCase() === given);
+}
+
+function grammarDisplayAnswer(correctAnswer) {
+  return correctAnswer.split('|').map(a => a.trim()).join(' / ');
+}
+
+function grammarShuffle(arr) {
+  const out = arr.slice();
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
+
+const GRAMMAR_ROUND_SIZE = 20;
+
 async function renderGrammarPractice(container) {
   container.innerHTML = `<div class="spinner"></div>`;
   const exercises = await fetchGrammarExercises();
@@ -52,31 +73,59 @@ async function renderGrammarPractice(container) {
     return;
   }
 
+  const topics = [...new Set(exercises.map(ex => ex.topic))].sort();
+  let currentTopic = '';
+  let round = [];
   let index = 0;
   let answered = false;
 
+  function startRound() {
+    const pool = currentTopic ? exercises.filter(ex => ex.topic === currentTopic) : exercises;
+    round = grammarShuffle(pool).slice(0, GRAMMAR_ROUND_SIZE);
+    index = 0;
+    renderExercise();
+  }
+
+  function topicFilterHtml() {
+    return `
+      <div class="field" style="margin-bottom:16px">
+        <select id="g-topic-filter">
+          <option value="">Todos los temas (${exercises.length})</option>
+          ${topics.map(t => `<option value="${t}" ${t === currentTopic ? 'selected' : ''}>${t} (${exercises.filter(ex => ex.topic === t).length})</option>`).join('')}
+        </select>
+      </div>
+    `;
+  }
+
+  function bindTopicFilter() {
+    document.getElementById('g-topic-filter').addEventListener('change', e => {
+      currentTopic = e.target.value;
+      startRound();
+    });
+  }
+
   function renderExercise() {
-    if (index >= exercises.length) {
+    if (index >= round.length) {
       container.innerHTML = `
+        ${topicFilterHtml()}
         <div class="card" style="text-align:center;padding:32px">
           <div style="font-size:32px;margin-bottom:12px">✓</div>
           <div style="font-weight:600;font-size:18px">¡Terminaste!</div>
-          <p style="color:var(--text-muted);margin:8px 0 20px">Completaste ${exercises.length} ejercicio${exercises.length !== 1 ? 's' : ''}.</p>
-          <button class="btn btn-primary" id="g-restart">Volver a empezar</button>
+          <p style="color:var(--text-muted);margin:8px 0 20px">Completaste ${round.length} ejercicio${round.length !== 1 ? 's' : ''}.</p>
+          <button class="btn btn-primary" id="g-restart">Otra ronda</button>
         </div>
       `;
-      document.getElementById('g-restart').addEventListener('click', () => {
-        index = 0;
-        renderExercise();
-      });
+      bindTopicFilter();
+      document.getElementById('g-restart').addEventListener('click', startRound);
       return;
     }
 
-    const ex = exercises[index];
+    const ex = round[index];
     answered = false;
 
     container.innerHTML = `
-      <div class="review-progress">${index + 1} / ${exercises.length}</div>
+      ${topicFilterHtml()}
+      <div class="review-progress">${index + 1} / ${round.length}</div>
       <div class="card" style="margin-bottom:16px">
         <div style="font-size:11px;color:var(--accent);font-weight:600;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em">${ex.topic}</div>
         <div style="font-size:18px;font-weight:600;line-height:1.4">${ex.prompt}</div>
@@ -93,6 +142,7 @@ async function renderGrammarPractice(container) {
       </form>
     `;
 
+    bindTopicFilter();
     document.getElementById('g-answer').focus();
 
     document.getElementById('grammar-form').addEventListener('submit', async e => {
@@ -101,13 +151,13 @@ async function renderGrammarPractice(container) {
       answered = true;
 
       const input = document.getElementById('g-answer').value.trim();
-      const correct = input.toLowerCase() === ex.correct_answer.toLowerCase();
+      const correct = grammarAnswerIsCorrect(input, ex.correct_answer);
       await logGrammarAttempt(ex.id, input, correct);
 
       document.getElementById('g-feedback').innerHTML = correct
         ? `<div class="msg-success" style="font-size:15px;padding:12px;margin-bottom:12px">¡Correcto!</div>`
         : `<div class="msg-error" style="font-size:15px;margin-bottom:4px">Incorrecto</div>
-           <div style="font-size:14px;color:var(--text-muted);margin-bottom:12px">Respuesta correcta: <strong>${ex.correct_answer}</strong></div>`;
+           <div style="font-size:14px;color:var(--text-muted);margin-bottom:12px">Respuesta correcta: <strong>${grammarDisplayAnswer(ex.correct_answer)}</strong></div>`;
 
       document.getElementById('g-actions').innerHTML = `
         <button class="btn btn-primary" id="g-next">Siguiente →</button>
@@ -119,7 +169,7 @@ async function renderGrammarPractice(container) {
     });
   }
 
-  renderExercise();
+  startRound();
 }
 
 // ── Exercise list ─────────────────────────────────────────────────────────────
@@ -139,7 +189,7 @@ async function renderGrammarList(container) {
         <div class="card" style="margin-bottom:8px">
           <div style="font-size:11px;color:var(--accent);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px">${ex.topic}</div>
           <div style="font-weight:500;line-height:1.4">${ex.prompt}</div>
-          <div style="font-size:13px;color:var(--text-muted);margin-top:6px">Respuesta: <strong>${ex.correct_answer}</strong></div>
+          <div style="font-size:13px;color:var(--text-muted);margin-top:6px">Respuesta: <strong>${grammarDisplayAnswer(ex.correct_answer)}</strong></div>
         </div>
       `).join('')}
     </div>

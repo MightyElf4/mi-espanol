@@ -126,6 +126,30 @@ async function renderReadingHistory(container, onAdd) {
   });
 }
 
+// ── Discover (recommended resources) ──────────────────────────────────────────
+
+async function fetchReadingResources() {
+  const userId = await getReadingUserId();
+  const { data, error } = await sb
+    .from('content_library')
+    .select('*')
+    .eq('user_id', userId)
+    .eq('type', 'reading')
+    .order('created_at', { ascending: true });
+  if (error) throw error;
+  return data || [];
+}
+
+async function renderReadingDiscover(container) {
+  container.innerHTML = `<div class="spinner"></div>`;
+  const resources = await fetchReadingResources();
+  if (resources.length === 0) {
+    container.innerHTML = `<div class="empty-state"><h3>Sin recomendaciones</h3><p>Claude añadirá recursos pronto.</p></div>`;
+    return;
+  }
+  renderResourceCards(container, resources);
+}
+
 // ── Stats ─────────────────────────────────────────────────────────────────────
 
 async function renderReadingStats(container) {
@@ -154,6 +178,7 @@ async function renderReadingModule(container) {
   const tabs = [
     { id: 'log', label: 'Registrar' },
     { id: 'history', label: 'Historial' },
+    { id: 'discover', label: 'Descubrir' },
     { id: 'stats', label: 'Estadísticas' },
   ];
 
@@ -166,6 +191,8 @@ async function renderReadingModule(container) {
       renderReadingForm(tc, () => renderTab('history'));
     } else if (tabId === 'history') {
       await renderReadingHistory(tc, () => renderTab('log'));
+    } else if (tabId === 'discover') {
+      await renderReadingDiscover(tc);
     } else if (tabId === 'stats') {
       await renderReadingStats(tc);
     }

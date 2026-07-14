@@ -126,6 +126,51 @@ async function renderListeningHistory(container, onAdd) {
   });
 }
 
+// ── Discover (recommended resources) ──────────────────────────────────────────
+
+async function fetchListeningResources() {
+  const userId = await getListeningUserId();
+  const { data, error } = await sb
+    .from('content_library')
+    .select('*')
+    .eq('user_id', userId)
+    .eq('type', 'listening')
+    .order('created_at', { ascending: true });
+  if (error) throw error;
+  return data || [];
+}
+
+function renderResourceCards(container, resources) {
+  const levelOrder = { beginner: 0, intermediate: 1, advanced: 2 };
+  const levelLabel = { beginner: 'Básico', intermediate: 'Intermedio', advanced: 'Avanzado' };
+  const sorted = resources.slice().sort((a, b) => (levelOrder[a.difficulty] ?? 1) - (levelOrder[b.difficulty] ?? 1));
+
+  container.innerHTML = `
+    <div>
+      ${sorted.map(r => `
+        <div class="card" style="margin-bottom:8px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
+            <a href="${r.url}" target="_blank" rel="noopener" style="font-weight:600;color:var(--accent);text-decoration:none">${r.title} ↗</a>
+            <span style="font-size:11px;color:var(--text-muted);flex-shrink:0">${levelLabel[r.difficulty] || r.difficulty}</span>
+          </div>
+          ${r.source ? `<div style="font-size:12px;color:var(--text-muted);margin-top:2px">${r.source}</div>` : ''}
+          ${r.description ? `<div style="font-size:13px;margin-top:6px;line-height:1.4">${r.description}</div>` : ''}
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+async function renderListeningDiscover(container) {
+  container.innerHTML = `<div class="spinner"></div>`;
+  const resources = await fetchListeningResources();
+  if (resources.length === 0) {
+    container.innerHTML = `<div class="empty-state"><h3>Sin recomendaciones</h3><p>Claude añadirá recursos pronto.</p></div>`;
+    return;
+  }
+  renderResourceCards(container, resources);
+}
+
 // ── Stats ─────────────────────────────────────────────────────────────────────
 
 async function renderListeningStats(container) {
@@ -154,6 +199,7 @@ async function renderListeningModule(container) {
   const tabs = [
     { id: 'log', label: 'Registrar' },
     { id: 'history', label: 'Historial' },
+    { id: 'discover', label: 'Descubrir' },
     { id: 'stats', label: 'Estadísticas' },
   ];
 
@@ -166,6 +212,8 @@ async function renderListeningModule(container) {
       renderListeningForm(tc, () => renderTab('history'));
     } else if (tabId === 'history') {
       await renderListeningHistory(tc, () => renderTab('log'));
+    } else if (tabId === 'discover') {
+      await renderListeningDiscover(tc);
     } else if (tabId === 'stats') {
       await renderListeningStats(tc);
     }
