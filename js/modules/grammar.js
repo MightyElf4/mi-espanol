@@ -1,8 +1,9 @@
 // ── DB helpers ────────────────────────────────────────────────────────────────
 
 async function getGrammarUserId() {
-  const { data: { user } } = await sb.auth.getUser();
-  return user.id;
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) throw new Error('Sesión expirada — vuelve a entrar');
+  return session.user.id;
 }
 
 async function fetchGrammarExercises() {
@@ -230,12 +231,16 @@ async function renderGrammarModule(container) {
       el.classList.toggle('active', el.dataset.tab === tabId)
     );
     const tc = document.getElementById('tab-content');
-    if (tabId === 'practice') {
-      await renderGrammarPractice(tc);
-    } else if (tabId === 'list') {
-      await renderGrammarList(tc);
-    } else if (tabId === 'stats') {
-      await renderGrammarStats(tc);
+    try {
+      if (tabId === 'practice') {
+        await renderGrammarPractice(tc);
+      } else if (tabId === 'list') {
+        await renderGrammarList(tc);
+      } else if (tabId === 'stats') {
+        await renderGrammarStats(tc);
+      }
+    } catch (err) {
+      showLoadError(tc, err, () => renderTab(tabId));
     }
   }
 

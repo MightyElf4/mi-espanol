@@ -2,8 +2,9 @@ async function renderDashboard(container) {
   container.innerHTML = `<div class="spinner"></div>`;
 
   try {
-    const { data: { user } } = await sb.auth.getUser();
-    const userId = user.id;
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) throw new Error('Sesión expirada — vuelve a entrar');
+    const userId = session.user.id;
     const today = new Date().toISOString().split('T')[0];
     const weekAgo = new Date(); weekAgo.setDate(weekAgo.getDate() - 7);
     const weekAgoStr = weekAgo.toISOString().split('T')[0];

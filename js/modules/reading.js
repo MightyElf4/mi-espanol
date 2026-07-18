@@ -1,8 +1,9 @@
 // ── DB helpers ────────────────────────────────────────────────────────────────
 
 async function getReadingUserId() {
-  const { data: { user } } = await sb.auth.getUser();
-  return user.id;
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) throw new Error('Sesión expirada — vuelve a entrar');
+  return session.user.id;
 }
 
 async function fetchReadingLog() {
@@ -187,14 +188,18 @@ async function renderReadingModule(container) {
       el.classList.toggle('active', el.dataset.tab === tabId)
     );
     const tc = document.getElementById('tab-content');
-    if (tabId === 'log') {
-      renderReadingForm(tc, () => renderTab('history'));
-    } else if (tabId === 'history') {
-      await renderReadingHistory(tc, () => renderTab('log'));
-    } else if (tabId === 'discover') {
-      await renderReadingDiscover(tc);
-    } else if (tabId === 'stats') {
-      await renderReadingStats(tc);
+    try {
+      if (tabId === 'log') {
+        renderReadingForm(tc, () => renderTab('history'));
+      } else if (tabId === 'history') {
+        await renderReadingHistory(tc, () => renderTab('log'));
+      } else if (tabId === 'discover') {
+        await renderReadingDiscover(tc);
+      } else if (tabId === 'stats') {
+        await renderReadingStats(tc);
+      }
+    } catch (err) {
+      showLoadError(tc, err, () => renderTab(tabId));
     }
   }
 

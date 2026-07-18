@@ -1,3 +1,14 @@
+function showLoadError(container, err, retryFn) {
+  container.innerHTML = `
+    <div class="empty-state">
+      <h3>No se pudo cargar</h3>
+      <p>${(err && err.message) || 'Revisa tu conexión e intenta de nuevo.'}</p>
+    </div>
+    <button class="btn btn-primary" id="retry-btn" style="margin-top:16px">Reintentar</button>
+  `;
+  document.getElementById('retry-btn').addEventListener('click', retryFn);
+}
+
 const router = {
   routes: {},
 
@@ -12,7 +23,9 @@ const router = {
     const view = document.getElementById('view');
     if (renderFn) {
       view.innerHTML = '';
-      renderFn(view);
+      Promise.resolve(renderFn(view)).catch(err =>
+        showLoadError(view, err, () => this.navigate(hash))
+      );
     } else {
       view.innerHTML = `<div class="empty-state"><h3>Página no encontrada</h3></div>`;
     }

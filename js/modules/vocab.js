@@ -1,8 +1,9 @@
 // ── Vocab DB helpers ──────────────────────────────────────────────────────────
 
 async function getUserId() {
-  const { data: { user } } = await sb.auth.getUser();
-  return user.id;
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) throw new Error('Sesión expirada — vuelve a entrar');
+  return session.user.id;
 }
 
 async function fetchDueCards() {
@@ -302,27 +303,31 @@ async function renderVocabModule(container) {
 
     const tabContent = document.getElementById('tab-content');
 
-    if (tabId === 'review') {
-      tabContent.innerHTML = `<div class="spinner"></div>`;
-      const due = await fetchDueCards();
-      if (due.length === 0) {
-        tabContent.innerHTML = `
-          <div class="empty-state">
-            <h3>¡Todo al día!</h3>
-            <p>No hay tarjetas para repasar hoy. Vuelve mañana.</p>
-          </div>
-        `;
-      } else {
-        tabContent.innerHTML = '';
-        renderReviewSession(tabContent, due);
+    try {
+      if (tabId === 'review') {
+        tabContent.innerHTML = `<div class="spinner"></div>`;
+        const due = await fetchDueCards();
+        if (due.length === 0) {
+          tabContent.innerHTML = `
+            <div class="empty-state">
+              <h3>¡Todo al día!</h3>
+              <p>No hay tarjetas para repasar hoy. Vuelve mañana.</p>
+            </div>
+          `;
+        } else {
+          tabContent.innerHTML = '';
+          renderReviewSession(tabContent, due);
+        }
+      } else if (tabId === 'cards') {
+        await renderCardList(tabContent, () => {
+          tabContent.innerHTML = '';
+          renderAddCard(tabContent, () => renderTab('cards'));
+        });
+      } else if (tabId === 'stats') {
+        await renderVocabStats(tabContent);
       }
-    } else if (tabId === 'cards') {
-      await renderCardList(tabContent, () => {
-        tabContent.innerHTML = '';
-        renderAddCard(tabContent, () => renderTab('cards'));
-      });
-    } else if (tabId === 'stats') {
-      await renderVocabStats(tabContent);
+    } catch (err) {
+      showLoadError(tabContent, err, () => renderTab(tabId));
     }
   }
 

@@ -1,8 +1,9 @@
 // ── DB helpers ────────────────────────────────────────────────────────────────
 
 async function getSpeakingUserId() {
-  const { data: { user } } = await sb.auth.getUser();
-  return user.id;
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) throw new Error('Sesión expirada — vuelve a entrar');
+  return session.user.id;
 }
 
 async function fetchSpeakingLog() {
@@ -216,14 +217,18 @@ async function renderSpeakingModule(container) {
       el.classList.toggle('active', el.dataset.tab === tabId)
     );
     const tc = document.getElementById('tab-content');
-    if (tabId === 'log') {
-      renderSpeakingForm(tc, () => renderTab('history'));
-    } else if (tabId === 'history') {
-      await renderSpeakingHistory(tc, () => renderTab('log'));
-    } else if (tabId === 'prompts') {
-      await renderSpeakingPrompts(tc);
-    } else if (tabId === 'stats') {
-      await renderSpeakingStats(tc);
+    try {
+      if (tabId === 'log') {
+        renderSpeakingForm(tc, () => renderTab('history'));
+      } else if (tabId === 'history') {
+        await renderSpeakingHistory(tc, () => renderTab('log'));
+      } else if (tabId === 'prompts') {
+        await renderSpeakingPrompts(tc);
+      } else if (tabId === 'stats') {
+        await renderSpeakingStats(tc);
+      }
+    } catch (err) {
+      showLoadError(tc, err, () => renderTab(tabId));
     }
   }
 

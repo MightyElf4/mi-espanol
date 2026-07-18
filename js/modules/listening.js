@@ -1,8 +1,9 @@
 // ── DB helpers ────────────────────────────────────────────────────────────────
 
 async function getListeningUserId() {
-  const { data: { user } } = await sb.auth.getUser();
-  return user.id;
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) throw new Error('Sesión expirada — vuelve a entrar');
+  return session.user.id;
 }
 
 async function fetchListeningLog() {
@@ -208,14 +209,18 @@ async function renderListeningModule(container) {
       el.classList.toggle('active', el.dataset.tab === tabId)
     );
     const tc = document.getElementById('tab-content');
-    if (tabId === 'log') {
-      renderListeningForm(tc, () => renderTab('history'));
-    } else if (tabId === 'history') {
-      await renderListeningHistory(tc, () => renderTab('log'));
-    } else if (tabId === 'discover') {
-      await renderListeningDiscover(tc);
-    } else if (tabId === 'stats') {
-      await renderListeningStats(tc);
+    try {
+      if (tabId === 'log') {
+        renderListeningForm(tc, () => renderTab('history'));
+      } else if (tabId === 'history') {
+        await renderListeningHistory(tc, () => renderTab('log'));
+      } else if (tabId === 'discover') {
+        await renderListeningDiscover(tc);
+      } else if (tabId === 'stats') {
+        await renderListeningStats(tc);
+      }
+    } catch (err) {
+      showLoadError(tc, err, () => renderTab(tabId));
     }
   }
 
