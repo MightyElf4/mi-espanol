@@ -1,0 +1,21 @@
+{
+  "built": "2026-07-19T23:19:11.245Z",
+  "counts": {
+    "lemmas": 11929,
+    "forms": 157161
+  },
+  "lemmaFiles": [
+    "lemmas-000.json",
+    "lemmas-001.json"
+  ],
+  "formFiles": [
+    "forms-000.json",
+    "forms-001.json",
+    "forms-002.json",
+    "forms-003.json",
+    "forms-004.json",
+    "forms-005.json",
+    "forms-006.json",
+    "forms-007.json"
+  ]
+}
