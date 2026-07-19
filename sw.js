@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mi-espanol-v5';
+const CACHE_NAME = 'mi-espanol-v6';
 const BASE = '/mi-espanol';
 const SHELL_FILES = [
   BASE + '/',
@@ -12,6 +12,7 @@ const SHELL_FILES = [
   BASE + '/js/sync.js',
   BASE + '/js/nav.js',
   BASE + '/js/router.js',
+  BASE + '/js/reader-utils.js',
   BASE + '/js/auth.js',
   BASE + '/js/modules/vocab.js',
   BASE + '/js/modules/grammar.js',
