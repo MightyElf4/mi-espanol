@@ -136,3 +136,69 @@
   padding: 4px 10px;
   white-space: nowrap;
 }
+
+/* ── Tap-a-word reader ───────────────────────────────────────────────────── */
+
+.reader-text-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+.reader-p {
+  font-size: 17px;
+  line-height: 1.8;
+  margin: 0 0 16px;
+}
+
+.tw {
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.tw-active {
+  background: color-mix(in srgb, var(--accent) 22%, transparent);
+  box-shadow: 0 1px 0 var(--accent);
+}
+
+.reader-sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(var(--nav-height) + var(--safe-bottom));
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border);
+  border-radius: var(--radius) var(--radius) 0 0;
+  padding: 14px 16px;
+  z-index: 40;
+  box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.25);
+  max-height: 45vh;
+  overflow-y: auto;
+}
+
+.reader-entry {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.reader-entry:last-of-type {
+  border-bottom: none;
+}
+
+.pos-chip {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border-radius: 999px;
+  padding: 2px 8px;
+  margin-left: 6px;
+}
