@@ -31,13 +31,144 @@ async function fetchGrammarAttempts() {
   const userId = await getGrammarUserId();
   const { data, error } = await sb
     .from('grammar_attempts')
-    .select('correct')
+    .select('correct, exercise_id')
     .eq('user_id', userId);
   if (error) throw error;
   return data || [];
 }
 
+async function fetchGrammarLessons() {
+  const userId = await getGrammarUserId();
+  const { data, error } = await sb
+    .from('grammar_lessons')
+    .select('*')
+    .eq('user_id', userId)
+    .order('topic', { ascending: true });
+  if (error) throw error;
+  return data || [];
+}
+
+// ── Lessons ───────────────────────────────────────────────────────────────────
+
+// **marcado** → <strong>marcado</strong> (lesson content is Claude-seeded, not user input)
+function grammarMdBold(s) {
+  return (s || '').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+}
+
+async function computeTopicAccuracy() {
+  const [attempts, exercises] = await Promise.all([fetchGrammarAttempts(), fetchGrammarExercises()]);
+  const topicById = {};
+  exercises.forEach(ex => { topicById[ex.id] = ex.topic; });
+  const acc = {};
+  attempts.forEach(a => {
+    const topic = topicById[a.exercise_id];
+    if (!topic) return;
+    acc[topic] = acc[topic] || { total: 0, correct: 0 };
+    acc[topic].total++;
+    if (a.correct) acc[topic].correct++;
+  });
+  return acc;
+}
+
+async function renderGrammarLessons(container, openLesson) {
+  container.innerHTML = `<div class="spinner"></div>`;
+  const [lessons, accuracy] = await Promise.all([fetchGrammarLessons(), computeTopicAccuracy()]);
+
+  if (lessons.length === 0) {
+    container.innerHTML = `<div class="empty-state"><h3>Sin lecciones todavía</h3><p>Claude añadirá lecciones de gramática en la próxima sesión.</p></div>`;
+    return;
+  }
+
+  const base = lessons.filter(l => l.difficulty !== 'advanced');
+  const advanced = lessons.filter(l => l.difficulty === 'advanced');
+
+  const chip = topic => {
+    const a = accuracy[topic];
+    if (!a) return `<span class="accuracy-chip">sin intentos</span>`;
+    const pct = Math.round((a.correct / a.total) * 100);
+    return `<span class="accuracy-chip">${pct}% · ${a.total} intento${a.total !== 1 ? 's' : ''}</span>`;
+  };
+
+  const group = (label, rows) => rows.length === 0 ? '' : `
+    <div style="font-size:12px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;margin:16px 0 8px">${label}</div>
+    ${rows.map(l => `
+      <div class="card lesson-row" data-id="${l.id}">
+        <div>
+          <div style="font-weight:600">${l.title}</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:2px">${l.topic}</div>
+        </div>
+        ${chip(l.topic)}
+      </div>
+    `).join('')}
+  `;
+
+  container.innerHTML = `
+    ${group('B1 — Base', base)}
+    ${group('B2–C1 — Avanzado', advanced)}
+  `;
+
+  container.addEventListener('click', e => {
+    const row = e.target.closest('.lesson-row');
+    if (!row) return;
+    const lesson = lessons.find(l => l.id === row.dataset.id);
+    if (lesson) openLesson(lesson);
+  });
+}
+
+function renderGrammarLessonDetail(container, lesson, { onBack, onPractice }) {
+  const paragraphs = html => html.split(/\n\n+/).map(p => `<p style="line-height:1.7;margin:0 0 12px">${grammarMdBold(p)}</p>`).join('');
+
+  const examples = (lesson.examples || []).map(ex => `
+    <div class="card" style="margin-bottom:8px">
+      <div style="font-weight:600;line-height:1.5">${grammarMdBold(ex.spanish)}</div>
+      <div style="font-size:13px;color:var(--text-muted);margin-top:4px">${ex.english}</div>
+      ${ex.note ? `<div style="font-size:12px;color:var(--accent);margin-top:6px">${ex.note}</div>` : ''}
+    </div>
+  `).join('');
+
+  const errors = (lesson.common_errors || []).length === 0 ? '' : `
+    <div style="font-size:12px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;margin:20px 0 8px">Errores comunes</div>
+    ${(lesson.common_errors || []).map(er => `
+      <div class="card error-box" style="margin-bottom:8px">
+        <div style="font-size:14px"><span style="color:var(--danger);text-decoration:line-through">${er.wrong}</span> → <strong style="color:var(--accent)">${er.right}</strong></div>
+        <div style="font-size:13px;color:var(--text-muted);margin-top:4px">${er.why}</div>
+      </div>
+    `).join('')}
+  `;
+
+  container.innerHTML = `
+    <div class="page-header" style="margin-bottom:12px">
+      <h2 style="font-size:20px">${lesson.title}</h2>
+      <button class="btn btn-secondary" id="l-back" style="padding:8px 14px;font-size:13px">← Volver</button>
+    </div>
+    <div style="font-size:11px;color:var(--accent);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:12px">${lesson.topic}</div>
+    <div class="card" style="margin-bottom:12px">
+      ${paragraphs(lesson.explanation_es)}
+      <button class="btn btn-secondary" id="l-toggle-en" style="padding:8px 14px;font-size:13px">Ver en inglés</button>
+      <div id="l-en-block" class="lesson-en-block" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
+        ${paragraphs(lesson.explanation_en)}
+      </div>
+    </div>
+    <div style="font-size:12px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;margin:20px 0 8px">Ejemplos</div>
+    ${examples}
+    ${errors}
+    <button class="btn btn-primary" id="l-practice" style="width:100%;margin-top:16px">Practicar este tema →</button>
+  `;
+
+  document.getElementById('l-back').addEventListener('click', onBack);
+  document.getElementById('l-toggle-en').addEventListener('click', () => {
+    const block = document.getElementById('l-en-block');
+    const hidden = block.style.display === 'none';
+    block.style.display = hidden ? 'block' : 'none';
+    document.getElementById('l-toggle-en').textContent = hidden ? 'Ocultar inglés' : 'Ver en inglés';
+  });
+  document.getElementById('l-practice').addEventListener('click', () => onPractice(lesson.topic));
+}
+
 // ── Practice session ──────────────────────────────────────────────────────────
+
+// Set before jumping to the practice tab to pre-select a topic
+let grammarJumpTopic = null;
 
 // correct_answer may hold several valid forms separated by "|" (e.g. "hubiera comido|habría comido")
 function grammarAnswerIsCorrect(input, correctAnswer) {
@@ -62,7 +193,9 @@ const GRAMMAR_ROUND_SIZE = 20;
 
 async function renderGrammarPractice(container) {
   container.innerHTML = `<div class="spinner"></div>`;
-  const exercises = await fetchGrammarExercises();
+  const [exercises, lessons] = await Promise.all([fetchGrammarExercises(), fetchGrammarLessons()]);
+  const lessonByTopic = {};
+  lessons.forEach(l => { lessonByTopic[l.topic] = l; });
 
   if (exercises.length === 0) {
     container.innerHTML = `
@@ -75,7 +208,8 @@ async function renderGrammarPractice(container) {
   }
 
   const topics = [...new Set(exercises.map(ex => ex.topic))].sort();
-  let currentTopic = '';
+  let currentTopic = grammarJumpTopic || '';
+  grammarJumpTopic = null;
   let round = [];
   let index = 0;
   let answered = false;
@@ -155,10 +289,12 @@ async function renderGrammarPractice(container) {
       const correct = grammarAnswerIsCorrect(input, ex.correct_answer);
       await logGrammarAttempt(ex.id, input, correct);
 
+      const lesson = lessonByTopic[ex.topic];
       document.getElementById('g-feedback').innerHTML = correct
         ? `<div class="msg-success" style="font-size:15px;padding:12px;margin-bottom:12px">¡Correcto!</div>`
         : `<div class="msg-error" style="font-size:15px;margin-bottom:4px">Incorrecto</div>
-           <div style="font-size:14px;color:var(--text-muted);margin-bottom:12px">Respuesta correcta: <strong>${grammarDisplayAnswer(ex.correct_answer)}</strong></div>`;
+           <div style="font-size:14px;color:var(--text-muted);margin-bottom:12px">Respuesta correcta: <strong>${grammarDisplayAnswer(ex.correct_answer)}</strong>
+           ${lesson ? `<div style="margin-top:8px"><a href="#" id="g-see-rule" style="color:var(--accent);font-weight:600">Ver la regla — ${ex.topic}</a></div>` : ''}</div>`;
 
       document.getElementById('g-actions').innerHTML = `
         <button class="btn btn-primary" id="g-next">Siguiente →</button>
@@ -167,6 +303,17 @@ async function renderGrammarPractice(container) {
         index++;
         renderExercise();
       });
+
+      const seeRule = document.getElementById('g-see-rule');
+      if (seeRule) {
+        seeRule.addEventListener('click', evt => {
+          evt.preventDefault();
+          renderGrammarLessonDetail(container, lesson, {
+            onBack: () => { index++; renderExercise(); },
+            onPractice: () => { index++; renderExercise(); },
+          });
+        });
+      }
     });
   }
 
@@ -221,6 +368,7 @@ async function renderGrammarStats(container) {
 
 async function renderGrammarModule(container) {
   const tabs = [
+    { id: 'lessons', label: 'Lecciones' },
     { id: 'practice', label: 'Practicar' },
     { id: 'list', label: 'Ejercicios' },
     { id: 'stats', label: 'Estadísticas' },
@@ -231,8 +379,18 @@ async function renderGrammarModule(container) {
       el.classList.toggle('active', el.dataset.tab === tabId)
     );
     const tc = document.getElementById('tab-content');
+
+    function openLesson(lesson) {
+      renderGrammarLessonDetail(tc, lesson, {
+        onBack: () => renderTab('lessons'),
+        onPractice: topic => { grammarJumpTopic = topic; renderTab('practice'); },
+      });
+    }
+
     try {
-      if (tabId === 'practice') {
+      if (tabId === 'lessons') {
+        await renderGrammarLessons(tc, openLesson);
+      } else if (tabId === 'practice') {
         await renderGrammarPractice(tc);
       } else if (tabId === 'list') {
         await renderGrammarList(tc);
