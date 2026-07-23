@@ -115,7 +115,10 @@ async function renderSpeakingHistory(container, onAdd) {
             <div>
               <div style="font-weight:600">${e.description}</div>
               <div style="font-size:12px;color:var(--text-muted);margin-top:2px">${e.date} · ${diffLabel(e.difficulty_rating)}</div>
-              ${e.couldnt_say ? `<div style="font-size:13px;margin-top:6px"><span style="color:var(--text-muted)">No pude decir:</span> ${e.couldnt_say}</div>` : ''}
+              ${e.couldnt_say ? `
+                <div style="font-size:13px;margin-top:6px"><span style="color:var(--text-muted)">No pude decir:</span> ${e.couldnt_say}</div>
+                <button class="btn btn-secondary sp-grammar-tree" data-text="${e.couldnt_say.replace(/"/g, '&quot;')}" style="margin-top:6px;padding:4px 8px;font-size:11px">🌳 Analizar Sintaxis en Árbol</button>
+              ` : ''}
             </div>
             <button class="btn btn-danger sp-delete" data-id="${e.id}" style="padding:6px 10px;font-size:12px;flex-shrink:0;margin-left:12px">✕</button>
           </div>
@@ -126,6 +129,12 @@ async function renderSpeakingHistory(container, onAdd) {
 
   document.getElementById('sp-add-btn').addEventListener('click', onAdd);
   document.getElementById('sp-list').addEventListener('click', async e => {
+    const treeBtn = e.target.closest('.sp-grammar-tree');
+    if (treeBtn) {
+      setCustomSentenceForTree(treeBtn.dataset.text);
+      router.navigate('#/grammar');
+      return;
+    }
     const btn = e.target.closest('.sp-delete');
     if (!btn) return;
     if (!confirm('¿Eliminar esta entrada?')) return;

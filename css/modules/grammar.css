@@ -1,0 +1,323 @@
+/* Grammar Module & Chomsky Syntax Tree Styles */
+
+/* Header & Navigation Tabs */
+.grammar-header-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: rgba(13, 148, 136, 0.12);
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+/* Mental Model & Rule Formula Cards */
+.formula-card {
+  background: var(--bg-surface-2);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.formula-card.subjunctive-rule { border-left-color: #8b5cf6; }
+.formula-card.ser-estar-rule { border-left-color: #3b82f6; }
+.formula-card.por-para-rule { border-left-color: #f59e0b; }
+.formula-card.pronoun-rule { border-left-color: #ec4899; }
+.formula-card.tico-rule { border-left-color: #10b981; }
+
+.formula-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.formula-pipeline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 10px 0;
+  padding: 10px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  border: 1px dashed var(--border);
+}
+
+.formula-chip {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.chip-subject { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+.chip-verb { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+.chip-object { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+.chip-trigger { background: rgba(139, 92, 246, 0.15); color: #8b5cf6; }
+.chip-prep { background: rgba(236, 72, 153, 0.15); color: #ec4899; }
+
+/* Side-by-side contrast tables */
+.contrast-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 12px 0;
+}
+
+@media (max-width: 480px) {
+  .contrast-grid { grid-template-columns: 1fr; }
+}
+
+.contrast-box {
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  border: 1px solid var(--border);
+}
+
+.contrast-box.left { border-top: 3px solid #3b82f6; }
+.contrast-box.right { border-top: 3px solid #10b981; }
+
+.contrast-title {
+  font-weight: 700;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+/* Chomsky Tree Visualizer */
+.tree-container {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 12px;
+  margin: 16px 0;
+  overflow-x: auto;
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  user-select: none;
+}
+
+.tree-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  margin: 0 4px;
+}
+
+.tree-label {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  background: var(--bg-surface-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  z-index: 2;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.tree-label.cat-S { background: #3b82f6; color: #fff; border-color: #2563eb; }
+.tree-label.cat-NP { background: rgba(59, 130, 246, 0.15); color: #3b82f6; border-color: rgba(59, 130, 246, 0.4); }
+.tree-label.cat-VP { background: rgba(16, 185, 129, 0.15); color: #10b981; border-color: rgba(16, 185, 129, 0.4); }
+.tree-label.cat-CP { background: rgba(139, 92, 246, 0.15); color: #8b5cf6; border-color: rgba(139, 92, 246, 0.4); }
+.tree-label.cat-PP { background: rgba(236, 72, 153, 0.15); color: #ec4899; border-color: rgba(236, 72, 153, 0.4); }
+
+.tree-children {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 16px;
+  margin-top: 24px;
+  position: relative;
+}
+
+.tree-slot {
+  min-width: 70px;
+  min-height: 40px;
+  margin-top: 12px;
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  transition: all 0.2s ease;
+}
+
+.tree-slot.active-dropzone {
+  border-color: var(--accent);
+  background: rgba(13, 148, 136, 0.08);
+}
+
+.tree-slot.slot-filled {
+  border-style: solid;
+  border-color: var(--accent);
+  background: var(--bg-surface-2);
+}
+
+/* Word Bank Chips */
+.word-bank {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 14px;
+  background: var(--bg-surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  min-height: 60px;
+  align-items: center;
+  justify-content: center;
+}
+
+.word-chip {
+  padding: 8px 14px;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: grab;
+  user-select: none;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.word-chip:hover {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.word-chip.selected-chip {
+  border-color: var(--accent);
+  background: rgba(13, 148, 136, 0.15);
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+.word-chip.placed {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.word-chip .pos-tag {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+/* Live Syntactic Feedback Bar */
+.syntax-analysis-bar {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  margin-top: 12px;
+}
+
+.syntax-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+.syntax-step:last-child { margin-bottom: 0; }
+
+.syntax-step-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.syntax-step-icon.ok { background: rgba(34, 197, 94, 0.15); color: var(--success); }
+.syntax-step-icon.info { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+.syntax-step-icon.warn { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
+
+/* Interactive Pronoun & Register Tool Components */
+.pronoun-slot-box {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: var(--bg-surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  margin: 12px 0;
+}
+
+.pronoun-chip {
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 15px;
+  background: #ec4899;
+  color: #fff;
+}
+
+.tico-register-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.register-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.tag-standard { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+.tag-usted { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+.tag-vos { background: rgba(139, 92, 246, 0.15); color: #8b5cf6; }
+.tag-tico { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+
+.connector-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 13px;
+  margin-right: 6px;
+}
+
+.connector-subjunctive { background: rgba(139, 92, 246, 0.15); color: #8b5cf6; border: 1px solid rgba(139, 92, 246, 0.3); }
+.connector-indicative { background: rgba(59, 130, 246, 0.15); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.3); }
+.connector-variable { background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); }
