@@ -809,7 +809,13 @@ async function renderGrammarModule(container, defaultTab = 'tree') {
   }
 
   container.innerHTML = `
-    <div class="page-header"><h2>Gramática y Estructura</h2></div>
+    <div class="hero-banner">
+      <img src="images/grammar_hero.jpg" alt="Estructura Sintáctica">
+      <div class="hero-overlay">
+        <div class="hero-title">Gramática y Estructura</div>
+        <div class="hero-subtitle">Árboles Sintácticos, Pronombres y Pragmática Tica</div>
+      </div>
+    </div>
     <div class="module-tabs">
       ${tabs.map(t => `<button class="module-tab" data-tab="${t.id}">${t.label}</button>`).join('')}
     </div>
