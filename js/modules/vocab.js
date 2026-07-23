@@ -7,16 +7,20 @@ async function getUserId() {
 }
 
 async function fetchDueCards() {
-  const userId = await getUserId();
-  const today = new Date().toISOString().split('T')[0];
-  const { data, error } = await sb
-    .from('vocab_cards')
-    .select('*')
-    .eq('user_id', userId)
-    .lte('due_date', today)
-    .order('due_date', { ascending: true });
-  if (error) throw error;
-  return data || [];
+  try {
+    const userId = await getUserId();
+    const today = new Date().toISOString().split('T')[0];
+    const { data, error } = await sb
+      .from('vocab_cards')
+      .select('*')
+      .eq('user_id', userId)
+      .lte('due_date', today)
+      .order('due_date', { ascending: true });
+    if (error) return [];
+    return data || [];
+  } catch (e) {
+    return [];
+  }
 }
 
 async function fetchAllCards() {
@@ -309,9 +313,27 @@ async function renderVocabModule(container) {
         const due = await fetchDueCards();
         if (due.length === 0) {
           tabContent.innerHTML = `
-            <div class="empty-state">
-              <h3>¡Todo al día!</h3>
-              <p>No hay tarjetas para repasar hoy. Vuelve mañana.</p>
+            <div class="empty-state" style="padding:24px 12px">
+              <h3>¡Todo al día por hoy!</h3>
+              <p style="margin-bottom:16px">No tienes tarjetas pendientes de repaso de repetición espaciada.</p>
+            </div>
+
+            <div style="font-weight:700;font-size:14px;margin:20px 0 10px">☕ Mazos Visuales por Tema</div>
+            <div class="deck-grid">
+              <div class="deck-card">
+                <img src="images/deck_tico.jpg" class="deck-img" alt="Vida Tica">
+                <div class="deck-body">
+                  <div class="deck-title">Vida y Tradición Tica</div>
+                  <div class="deck-desc">Expresiones cotidianas, café chorreado, costumbres de Guanacaste.</div>
+                </div>
+              </div>
+              <div class="deck-card">
+                <img src="images/deck_nature.jpg" class="deck-img" alt="Naturaleza">
+                <div class="deck-body">
+                  <div class="deck-title">Naturaleza y Campo</div>
+                  <div class="deck-desc">Vocabulario de la fauna, flora, clima y entorno rural de Hojancha.</div>
+                </div>
+              </div>
             </div>
           `;
         } else {
@@ -332,7 +354,13 @@ async function renderVocabModule(container) {
   }
 
   container.innerHTML = `
-    <div class="page-header"><h2>Vocabulario</h2></div>
+    <div class="hero-banner">
+      <img src="images/vocab_hero_v1.jpg" alt="Vocabulario SRS">
+      <div class="hero-overlay">
+        <div class="hero-title">Vocabulario SRS</div>
+        <div class="hero-subtitle">Repetición Espaciada y Cuaderno Visual</div>
+      </div>
+    </div>
     <div class="module-tabs">
       ${tabs.map(t => `
         <button class="module-tab${t.id === activeTab ? ' active' : ''}" data-tab="${t.id}">
