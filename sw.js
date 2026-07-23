@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mi-espanol-v13';
+const CACHE_NAME = 'mi-espanol-v14';
 const BASE = location.pathname.startsWith('/mi-espanol') ? '/mi-espanol' : '';
 const SHELL_FILES = [
   BASE + '/',

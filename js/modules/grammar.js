@@ -403,6 +403,212 @@ const CHOMSKY_TREE_DATASETS = [
         }
       ]
     }
+  },
+  {
+    id: 'tree-por-para-1',
+    title: 'Cláusula Preposicional de Objetivo (Para)',
+    topic: 'Por vs. Para',
+    explanation: 'El Sintagma Preposicional (PP) "para cocinar la cena" expresa la meta u objetivo futuro del Sintagma Verbal (VP).',
+    explanation_en: 'English Structural Parallel: "I bought [V] vegetables [NP] in order to cook [PP/Goal] dinner [VP]". Note: PARA points forward toward purpose or goal.',
+    words: [
+      { id: 'w1', word: 'Compré', pos: 'V (Matriz)', slotId: 'slot-v' },
+      { id: 'w2', word: 'verduras', pos: 'N', slotId: 'slot-n' },
+      { id: 'w3', word: 'para', pos: 'PREP (Meta)', slotId: 'slot-prep' },
+      { id: 'w4', word: 'cocinar', pos: 'V (Infin)', slotId: 'slot-v2' },
+      { id: 'w5', word: 'la cena', pos: 'NP', slotId: 'slot-np' },
+      { id: 'd1', word: 'por', pos: 'PREP (Causa)', isDistractor: true },
+      { id: 'd2', word: 'cocino', pos: 'V (Presente)', isDistractor: true }
+    ],
+    tree: {
+      label: 'S',
+      cat: 'cat-S',
+      children: [
+        {
+          label: 'VP',
+          cat: 'cat-VP',
+          children: [
+            { label: 'V', cat: 'cat-VP', slotId: 'slot-v', expected: 'Compré' },
+            { label: 'N', cat: 'cat-NP', slotId: 'slot-n', expected: 'verduras' },
+            {
+              label: 'PP',
+              cat: 'cat-PP',
+              children: [
+                { label: 'PREP', cat: 'cat-PP', slotId: 'slot-prep', expected: 'para' },
+                { label: 'V', cat: 'cat-VP', slotId: 'slot-v2', expected: 'cocinar' },
+                { label: 'NP', cat: 'cat-NP', slotId: 'slot-np', expected: 'la cena' }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    id: 'tree-hipotesis-1',
+    title: 'Oración Condicional Irreal (Subjuntivo + Condicional)',
+    topic: 'Subjuntivo — Hipótesis',
+    explanation: 'Estructura condicional de alta complejidad (C1): la prótasis ("Si tuviera dinero") exige el Subjuntivo Imperfecto y la apódosis ("viajaría") exige el Condicional.',
+    explanation_en: 'English Structural Parallel: "If I had [Past Subjunctive CP] money, I would travel [Conditional S\'] to San José [PP]".',
+    words: [
+      { id: 'w1', word: 'Si', pos: 'COMP (Cond)', slotId: 'slot-comp' },
+      { id: 'w2', word: 'tuviera', pos: 'V (Subj Impf)', slotId: 'slot-v1' },
+      { id: 'w3', word: 'dinero', pos: 'N', slotId: 'slot-n' },
+      { id: 'w4', word: 'viajaría', pos: 'V (Condicional)', slotId: 'slot-v2' },
+      { id: 'w5', word: 'a San José', pos: 'PP', slotId: 'slot-pp' },
+      { id: 'd1', word: 'tengo', pos: 'V (Indicativo)', isDistractor: true },
+      { id: 'd2', word: 'viajo', pos: 'V (Presente)', isDistractor: true }
+    ],
+    tree: {
+      label: 'S',
+      cat: 'cat-S',
+      children: [
+        {
+          label: 'CP',
+          cat: 'cat-CP',
+          children: [
+            { label: 'C', cat: 'cat-CP', slotId: 'slot-comp', expected: 'Si' },
+            { label: 'V', cat: 'cat-VP', slotId: 'slot-v1', expected: 'tuviera' },
+            { label: 'N', cat: 'cat-NP', slotId: 'slot-n', expected: 'dinero' }
+          ]
+        },
+        {
+          label: 'S\'',
+          cat: 'cat-S',
+          children: [
+            { label: 'V', cat: 'cat-VP', slotId: 'slot-v2', expected: 'viajaría' },
+            { label: 'PP', cat: 'cat-PP', slotId: 'slot-pp', expected: 'a San José' }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    id: 'tree-voseo-1',
+    title: 'Estructura Imperativa Tica en Voseo',
+    topic: 'Registro Tico (Voseo)',
+    explanation: 'El mandato imperativo en voseo ("Mirá") desplaza el acento tónico a la vocal final ([mi.ˈra]).',
+    explanation_en: 'English Structural Parallel: "Look at [Voseo V] this view [NP] so beautiful [AP]". Note the end-stress on "Mirá" vs. formal "Mire".',
+    words: [
+      { id: 'w1', word: 'Mirá', pos: 'V (Imp Vos)', slotId: 'slot-v' },
+      { id: 'w2', word: 'esta vista', pos: 'NP', slotId: 'slot-np' },
+      { id: 'w3', word: 'tan bonita', pos: 'AP', slotId: 'slot-ap' },
+      { id: 'd1', word: 'Mire', pos: 'V (Imp Usted)', isDistractor: true },
+      { id: 'd2', word: 'este', pos: 'DET (Masc)', isDistractor: true }
+    ],
+    tree: {
+      label: 'S',
+      cat: 'cat-S',
+      children: [
+        {
+          label: 'VP',
+          cat: 'cat-VP',
+          children: [
+            { label: 'V', cat: 'cat-VP', slotId: 'slot-v', expected: 'Mirá' },
+            { label: 'NP', cat: 'cat-NP', slotId: 'slot-np', expected: 'esta vista' },
+            { label: 'AP', cat: 'cat-CP', slotId: 'slot-ap', expected: 'tan bonita' }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    id: 'tree-gustar-1',
+    title: 'Estructura Invertida de Experimentador (Verbo Gustar)',
+    topic: 'Verbos de Experimentador',
+    explanation: 'En "A mi amigo le gusta el café tico", el sujeto sintáctico postverbal es "el café tico" y el experimentador es el PP "A mi amigo".',
+    explanation_en: 'English Structural Parallel: "To my friend [Indirect PP] is pleasing [VP] Tico coffee [Syntactic Subject NP]".',
+    words: [
+      { id: 'w1', word: 'A mi amigo', pos: 'PP (Exp)', slotId: 'slot-pp' },
+      { id: 'w2', word: 'le', pos: 'PRON (Indir)', slotId: 'slot-p' },
+      { id: 'w3', word: 'gusta', pos: 'V (Singular)', slotId: 'slot-v' },
+      { id: 'w4', word: 'el café tico', pos: 'NP (Sujeto)', slotId: 'slot-np' },
+      { id: 'd1', word: 'les', pos: 'PRON (Plural)', isDistractor: true },
+      { id: 'd2', word: 'gustan', pos: 'V (Plural)', isDistractor: true }
+    ],
+    tree: {
+      label: 'S',
+      cat: 'cat-S',
+      children: [
+        { label: 'PP', cat: 'cat-PP', slotId: 'slot-pp', expected: 'A mi amigo' },
+        {
+          label: 'VP',
+          cat: 'cat-VP',
+          children: [
+            { label: 'PRON', cat: 'cat-NP', slotId: 'slot-p', expected: 'le' },
+            { label: 'V', cat: 'cat-VP', slotId: 'slot-v', expected: 'gusta' },
+            { label: 'NP', cat: 'cat-NP', slotId: 'slot-np', expected: 'el café tico' }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    id: 'tree-duda-1',
+    title: 'Matriz de Negación y Duda (No creo que)',
+    topic: 'Subjuntivo — Deseos y Dudas',
+    explanation: 'La negación del verbo de opinión ("No creo") introduce duda sobre la veracidad, obligando al uso del Subjuntivo "sea" en el CP subordinado.',
+    explanation_en: 'English Structural Parallel: "I do not think [Negative Opinion VP] that [COMP] it is [Subjunctive V] so hard [AP]".',
+    words: [
+      { id: 'w1', word: 'No creo', pos: 'V (Matriz)', slotId: 'slot-v1' },
+      { id: 'w2', word: 'que', pos: 'COMP', slotId: 'slot-comp' },
+      { id: 'w3', word: 'sea', pos: 'V (Subj)', slotId: 'slot-v2' },
+      { id: 'w4', word: 'tan difícil', pos: 'AP', slotId: 'slot-ap' },
+      { id: 'd1', word: 'es', pos: 'V (Indicativo)', isDistractor: true },
+      { id: 'd2', word: 'si', pos: 'COMP', isDistractor: true }
+    ],
+    tree: {
+      label: 'S',
+      cat: 'cat-S',
+      children: [
+        {
+          label: 'VP',
+          cat: 'cat-VP',
+          children: [
+            { label: 'V', cat: 'cat-VP', slotId: 'slot-v1', expected: 'No creo' },
+            {
+              label: 'CP',
+              cat: 'cat-CP',
+              children: [
+                { label: 'C', cat: 'cat-CP', slotId: 'slot-comp', expected: 'que' },
+                { label: 'V', cat: 'cat-VP', slotId: 'slot-v2', expected: 'sea' },
+                { label: 'AP', cat: 'cat-CP', slotId: 'slot-ap', expected: 'tan difícil' }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    id: 'tree-progresivo-1',
+    title: 'Aspecto Durativo Progresivo (Estar + Gerundio)',
+    topic: 'Ser vs. Estar',
+    explanation: 'El Sintagma Verbal progresivo combina la forma auxiliar "está" con el gerundio durativo "trabajando".',
+    explanation_en: 'English Structural Parallel: "Carlos [Subject NP] is [Auxiliary V] working [Gerund] on the farm [PP]".',
+    words: [
+      { id: 'w1', word: 'Carlos', pos: 'NP', slotId: 'slot-np' },
+      { id: 'w2', word: 'está', pos: 'V (Aux)', slotId: 'slot-v1' },
+      { id: 'w3', word: 'trabajando', pos: 'V (Gerundio)', slotId: 'slot-v2' },
+      { id: 'w4', word: 'en la finca', pos: 'PP', slotId: 'slot-pp' },
+      { id: 'd1', word: 'es', pos: 'V (Ser)', isDistractor: true },
+      { id: 'd2', word: 'trabajar', pos: 'V (Infin)', isDistractor: true }
+    ],
+    tree: {
+      label: 'S',
+      cat: 'cat-S',
+      children: [
+        { label: 'NP', cat: 'cat-NP', slotId: 'slot-np', expected: 'Carlos' },
+        {
+          label: 'VP',
+          cat: 'cat-VP',
+          children: [
+            { label: 'V', cat: 'cat-VP', slotId: 'slot-v1', expected: 'está' },
+            { label: 'V', cat: 'cat-VP', slotId: 'slot-v2', expected: 'trabajando' },
+            { label: 'PP', cat: 'cat-PP', slotId: 'slot-pp', expected: 'en la finca' }
+          ]
+        }
+      ]
+    }
   }
 ];
 
