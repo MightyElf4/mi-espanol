@@ -248,13 +248,16 @@ const CHOMSKY_TREE_DATASETS = [
     id: 'tree-subjunctive-1',
     title: 'Cláusula Subordinada Sustantiva (Subjuntivo)',
     topic: 'Subjuntivo — Deseos y Dudas',
-    explanation: 'Estructura jerárquica: la oración principal (S) contiene un VP con verbo matriz de deseo ("Espero") que toma una cláusula subordinada (CP) encabezada por "que" y un verbo en subjuntivo ("vengas").',
+    explanation: 'Estructura jerárquica: la oración principal (S) contiene un VP con verbo matriz de deseo ("Espero") que toma una cláusula subordinada (CP) encabezada por "que" y un verbo en subjuntivo ("vengas"). Desafío: distínguelo del indicativo "vienes".',
     words: [
       { id: 'w1', word: 'Espero', pos: 'V (Matriz)', slotId: 'slot-v1' },
       { id: 'w2', word: 'que', pos: 'COMP', slotId: 'slot-comp' },
       { id: 'w3', word: 'tú', pos: 'PRON', slotId: 'slot-pron' },
       { id: 'w4', word: 'vengas', pos: 'V (Subj)', slotId: 'slot-v2' },
-      { id: 'w5', word: 'pronto', pos: 'ADV', slotId: 'slot-adv' }
+      { id: 'w5', word: 'pronto', pos: 'ADV', slotId: 'slot-adv' },
+      { id: 'd1', word: 'vienes', pos: 'V (Indicativo)', isDistractor: true },
+      { id: 'd2', word: 'si', pos: 'COMP', isDistractor: true },
+      { id: 'd3', word: 'esperaba', pos: 'V (Imperfecto)', isDistractor: true }
     ],
     tree: {
       label: 'S',
@@ -292,13 +295,15 @@ const CHOMSKY_TREE_DATASETS = [
     id: 'tree-ser-estar-1',
     title: 'Estructura Copulativa de Estado (Estar + Adj)',
     topic: 'Ser vs. Estar',
-    explanation: 'El Sintagma Verbal (VP) copulativo contiene el verbo auxiliar de estado "está" seguido del Sintagma Adjetival "muy caliente".',
+    explanation: 'El Sintagma Verbal (VP) copulativo contiene el verbo auxiliar de estado "está" seguido del Sintagma Adjetival "muy caliente". Desafío: contrástalo con el verbo identificativo "es".',
     words: [
       { id: 'w1', word: 'El', pos: 'DET', slotId: 'slot-det' },
       { id: 'w2', word: 'café', pos: 'N', slotId: 'slot-n' },
       { id: 'w3', word: 'está', pos: 'V (Cop)', slotId: 'slot-v' },
       { id: 'w4', word: 'muy', pos: 'ADV', slotId: 'slot-adv' },
-      { id: 'w5', word: 'caliente', pos: 'ADJ', slotId: 'slot-adj' }
+      { id: 'w5', word: 'caliente', pos: 'ADJ', slotId: 'slot-adj' },
+      { id: 'd1', word: 'es', pos: 'V (Ser)', isDistractor: true },
+      { id: 'd2', word: 'La', pos: 'DET (Fem)', isDistractor: true }
     ],
     tree: {
       label: 'S',
@@ -325,12 +330,90 @@ const CHOMSKY_TREE_DATASETS = [
         }
       ]
     }
+  },
+  {
+    id: 'tree-double-pronouns-1',
+    title: 'Transformación de Pronombres Dobles (Se + Lo)',
+    topic: 'Pronombres Dobles (Apócope)',
+    explanation: 'Estructura con apócope pronominal: el objeto indirecto "Le" se transforma en "Se" ante el objeto directo "lo" en el VP ("Se lo dije").',
+    words: [
+      { id: 'w1', word: 'Se', pos: 'PRON (Indir)', slotId: 'slot-p1' },
+      { id: 'w2', word: 'lo', pos: 'PRON (Dir)', slotId: 'slot-p2' },
+      { id: 'w3', word: 'dije', pos: 'V (Matriz)', slotId: 'slot-v' },
+      { id: 'w4', word: 'ayer', pos: 'ADV', slotId: 'slot-adv' },
+      { id: 'd1', word: 'Le', pos: 'PRON (Incorrecto)', isDistractor: true },
+      { id: 'd2', word: 'la', pos: 'PRON (Fem)', isDistractor: true },
+      { id: 'd3', word: 'digo', pos: 'V (Presente)', isDistractor: true }
+    ],
+    tree: {
+      label: 'S',
+      cat: 'cat-S',
+      children: [
+        {
+          label: 'VP',
+          cat: 'cat-VP',
+          children: [
+            { label: 'PRON', cat: 'cat-NP', slotId: 'slot-p1', expected: 'Se' },
+            { label: 'PRON', cat: 'cat-NP', slotId: 'slot-p2', expected: 'lo' },
+            { label: 'V', cat: 'cat-VP', slotId: 'slot-v', expected: 'dije' },
+            { label: 'ADV', cat: 'cat-VP', slotId: 'slot-adv', expected: 'ayer' }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    id: 'tree-conectores-1',
+    title: 'Cláusula Adverbial Condicional Tica',
+    topic: 'Conectores y Cláusulas',
+    explanation: 'El conector de hipótesis "con tal de que" rige de forma obligatoria el modo Subjuntivo ("llamara" / "viniera").',
+    words: [
+      { id: 'w1', word: 'Dijo', pos: 'V (Matriz)', slotId: 'slot-v1' },
+      { id: 'w2', word: 'que', pos: 'COMP', slotId: 'slot-comp' },
+      { id: 'w3', word: 'viniera', pos: 'V (Subj Impref)', slotId: 'slot-v2' },
+      { id: 'w4', word: 'con tal de que', pos: 'CONJ', slotId: 'slot-conj' },
+      { id: 'w5', word: 'llamara', pos: 'V (Subj)', slotId: 'slot-v3' },
+      { id: 'd1', word: 'viene', pos: 'V (Indicativo)', isDistractor: true },
+      { id: 'd2', word: 'para que', pos: 'CONJ', isDistractor: true }
+    ],
+    tree: {
+      label: 'S',
+      cat: 'cat-S',
+      children: [
+        {
+          label: 'VP',
+          cat: 'cat-VP',
+          children: [
+            { label: 'V', cat: 'cat-VP', slotId: 'slot-v1', expected: 'Dijo' },
+            {
+              label: 'CP',
+              cat: 'cat-CP',
+              children: [
+                { label: 'C', cat: 'cat-CP', slotId: 'slot-comp', expected: 'que' },
+                { label: 'V', cat: 'cat-VP', slotId: 'slot-v2', expected: 'viniera' },
+                { label: 'CONJ', cat: 'cat-PP', slotId: 'slot-conj', expected: 'con tal de que' },
+                { label: 'V', cat: 'cat-VP', slotId: 'slot-v3', expected: 'llamara' }
+              ]
+            }
+          ]
+        }
+      ]
+    }
   }
 ];
 
 let activeTreeDatasetId = null;
 
 // ── 1. Chomsky Tree Activity & Sandbox Component ─────────────────────────────
+
+function shuffleArray(arr) {
+  const result = [...arr];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
 
 function renderChomskyTreeActivity(container) {
   let datasetsPool = [...CHOMSKY_TREE_DATASETS];
@@ -344,15 +427,18 @@ function renderChomskyTreeActivity(container) {
   let currentDataset = datasetsPool[datasetIndex];
   let wordPlacements = {};
   let selectedWordId = null;
+  let shuffledWords = [];
 
   function initActivity() {
     wordPlacements = {};
     selectedWordId = null;
+    shuffledWords = shuffleArray(currentDataset.words || []);
     renderUI();
   }
 
   function renderUI() {
     const isComplete = checkIsComplete();
+    const hasDistractorPlaced = checkHasDistractor();
 
     container.innerHTML = `
       <div class="card" style="margin-bottom:14px">
@@ -366,7 +452,7 @@ function renderChomskyTreeActivity(container) {
         </div>
         <h3 style="font-size:16px;margin-bottom:4px">${currentDataset.title}</h3>
         <p style="font-size:13px;color:var(--text-muted)">
-          Arrastra o toca cada palabra del banco inferior para colocarla en la posición sintáctica correcta del árbol Chomsky.
+          Arrastra o toca cada palabra del banco inferior para colocarla en su posición sintáctica. ⚠️ <strong>¡Atención!</strong> Las palabras están desordenadas e incluyen distractores gramaticales.
         </p>
 
         <!-- Custom Sandbox Sentence Drawer -->
@@ -379,12 +465,12 @@ function renderChomskyTreeActivity(container) {
         </div>
       </div>
 
-      <!-- Word Bank -->
+      <!-- Word Bank (Randomized Order) -->
       <div style="font-size:12px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px">
-        Banco de palabras disponibles
+        Banco de palabras disponibles (Desordenado + Distractores)
       </div>
       <div class="word-bank" id="word-bank-container">
-        ${currentDataset.words.map(w => {
+        ${shuffledWords.map(w => {
           const isPlaced = Object.values(wordPlacements).includes(w.word);
           const isSelected = selectedWordId === w.id;
           return `
@@ -407,7 +493,7 @@ function renderChomskyTreeActivity(container) {
       <!-- Live Syntactic Feedback -->
       <div class="syntax-analysis-bar">
         <div style="font-weight:700;font-size:13px;margin-bottom:8px;display:flex;align-items:center;gap:6px">
-          <span>🔍 Análisis Sintáctico de la Oración</span>
+          <span>🔍 Análisis Sintáctico y Validación</span>
         </div>
         <p style="font-size:13px;color:var(--text-muted);line-height:1.5;margin-bottom:10px">
           ${currentDataset.explanation}
@@ -416,14 +502,19 @@ function renderChomskyTreeActivity(container) {
           ${isComplete ? `
             <div class="syntax-step" style="color:var(--success);font-weight:600">
               <div class="syntax-step-icon ok">✓</div>
-              <span>¡Excelente! Estructura sintáctica construida correctamente.</span>
+              <span>¡Excelente! Árbol sintáctico construido correctamente a pesar de los distractores.</span>
+            </div>
+          ` : (hasDistractorPlaced ? `
+            <div class="syntax-step" style="color:var(--danger);font-weight:600">
+              <div class="syntax-step-icon err">✕</div>
+              <span>Atención: Has colocado una palabra distractor o en el nodo incorrecto. Revisa el tiempo, modo o caso sintáctico.</span>
             </div>
           ` : `
             <div class="syntax-step">
               <div class="syntax-step-icon info">i</div>
-              <span>Coloca todas las palabras en los nodos terminales para verificar el árbol.</span>
+              <span>Selecciona una palabra desordenada y colócala en su nodo terminal correcto.</span>
             </div>
-          `}
+          `)}
         </div>
       </div>
 
@@ -473,7 +564,17 @@ function renderChomskyTreeActivity(container) {
       if (n.children) n.children.forEach(collectSlots);
     }
     collectSlots(currentDataset.tree);
-    return slots.every(s => wordPlacements[s.slotId] === s.expected);
+    return slots.length > 0 && slots.every(s => wordPlacements[s.slotId] === s.expected);
+  }
+
+  function checkHasDistractor() {
+    const slots = [];
+    function collectSlots(n) {
+      if (n.slotId) slots.push(n);
+      if (n.children) n.children.forEach(collectSlots);
+    }
+    collectSlots(currentDataset.tree);
+    return slots.some(s => wordPlacements[s.slotId] && wordPlacements[s.slotId] !== s.expected);
   }
 
   function bindEvents() {
