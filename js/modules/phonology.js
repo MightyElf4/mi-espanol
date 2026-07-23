@@ -11,7 +11,8 @@ const PHONOLOGY_DRILLS = [
       { text: 'Costa', phonetic: '[ˈko.ta] (S aspirada)', isCorrect: true },
       { text: 'Cota', phonetic: '[ˈko.ta] (Sin S)', isCorrect: false }
     ],
-    hint: 'Escucha la ligera aspiración implosiva de la S al final de sílaba.'
+    hint: 'Escucha la ligera aspiración implosiva de la S al final de sílaba.',
+    hint_en: 'English Phonetic Hint: Listen for the soft breathy "h" sound replacing the final "s" in "Costa" ([ˈko.ta]).'
   },
   {
     id: 2,
@@ -23,7 +24,8 @@ const PHONOLOGY_DRILLS = [
       { text: 'Río (Asibilada)', phonetic: '[ˈʒi.o] (Fricativa tica)', isCorrect: true },
       { text: 'Río (Vibrante)', phonetic: '[ˈri.o] (Vibrante múltiple estándar)', isCorrect: false }
     ],
-    hint: 'La R tica tradicional tiene una resonancia fricativa asibilada suave.'
+    hint: 'La R tica tradicional tiene una resonancia fricativa asibilada suave.',
+    hint_en: 'English Phonetic Hint: The Costa Rican "R" has a unique soft fricative buzz rather than a sharp tongue trill.'
   },
   {
     id: 3,
@@ -35,7 +37,8 @@ const PHONOLOGY_DRILLS = [
       { text: 'Mirá (Voseo)', phonetic: '[mi.ˈra] (Coloquial Tico)', isCorrect: false },
       { text: 'Mire (Usted)', phonetic: '[ˈmi.re] (Respetuoso Tico)', isCorrect: true }
     ],
-    hint: 'En Costa Rica se alterna naturalmente entre el Usted formal y el Vos tico.'
+    hint: 'En Costa Rica se alterna naturally entre el Usted formal y el Vos tico.',
+    hint_en: 'English Phonetic Hint: Notice the stress shift — formal "Mire" (stress on MI) vs colloquial voseo "Mirá" (stress on RÁ).'
   }
 ];
 
@@ -77,17 +80,20 @@ async function renderPhonologyModule(container) {
       </div>
 
       <!-- Player Drill Card -->
-      <div class="card" style="text-align:center;padding:24px 16px;margin-bottom:20px">
+      <div class="card" style="text-align:center;padding:20px 16px;margin-bottom:20px">
         <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--accent);letter-spacing:0.08em;margin-bottom:6px">
           Ejercicio ${activeDrillIndex + 1} de ${PHONOLOGY_DRILLS.length} · ${drill.category}
         </div>
-        <div style="font-size:18px;font-weight:800;margin-bottom:16px">${drill.question}</div>
+        <div style="font-size:18px;font-weight:800;margin-bottom:14px">${drill.question}</div>
 
-        <button id="play-audio-btn" class="btn btn-primary" style="width:72px;height:72px;border-radius:50%;margin:0 auto 16px;font-size:26px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(13,148,136,0.4)">
+        <button id="play-audio-btn" class="btn btn-primary" style="width:64px;height:64px;border-radius:50%;margin:0 auto 14px;font-size:24px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(13,148,136,0.4)">
           ▶
         </button>
 
-        <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px">${drill.hint}</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:6px">${drill.hint}</div>
+        <div style="background:rgba(13,148,136,0.1);border:1px solid rgba(13,148,136,0.25);border-radius:6px;padding:6px 10px;font-size:11px;color:var(--text);margin-top:4px">
+          🇬🇧 <strong>English Scaffolding:</strong> ${drill.hint_en}
+        </div>
       </div>
 
       <!-- Minimal Pair Selection -->
@@ -111,15 +117,21 @@ async function renderPhonologyModule(container) {
 
       <div class="card" style="margin-bottom:10px">
         <div style="font-weight:700;font-size:14px;color:var(--warning);margin-bottom:4px">1. Aspiración de 'S' Implosiva</div>
-        <div style="font-size:12px;color:var(--text-muted);line-height:1.4">
+        <div style="font-size:12px;color:var(--text-muted);line-height:1.4;margin-bottom:6px">
           En el habla cotidiana de Costa Rica, la 'S' al final de sílaba a menudo se aspira suavemente como 'H': <em>"¿Cómo e'tá?"</em> [ˈko.mo eh.ˈta].
+        </div>
+        <div style="font-size:11px;color:var(--accent);font-weight:600">
+          🇬🇧 English Note: Final 's' in Tico speech softens into a light breath ('h') sound before consonants or pauses.
         </div>
       </div>
 
       <div class="card">
         <div style="font-weight:700;font-size:14px;color:var(--warning);margin-bottom:4px">2. La 'R' Asibilada Tica</div>
-        <div style="font-size:12px;color:var(--text-muted);line-height:1.4">
+        <div style="font-size:12px;color:var(--text-muted);line-height:1.4;margin-bottom:6px">
           La 'R' doble o inicial costarricense frecuentemente no se vibra con la punta de la lengua, sino que se asibila con una fricción suave única del dialecto tico.
+        </div>
+        <div style="font-size:11px;color:var(--accent);font-weight:600">
+          🇬🇧 English Note: Unlike standard Spanish tongue trills, Tico 'R' sounds similar to a soft, un-trilled fricative buzz.
         </div>
       </div>
     `;

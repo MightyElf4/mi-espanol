@@ -249,6 +249,7 @@ const CHOMSKY_TREE_DATASETS = [
     title: 'Cláusula Subordinada Sustantiva (Subjuntivo)',
     topic: 'Subjuntivo — Deseos y Dudas',
     explanation: 'Estructura jerárquica: la oración principal (S) contiene un VP con verbo matriz de deseo ("Espero") que toma una cláusula subordinada (CP) encabezada por "que" y un verbo en subjuntivo ("vengas"). Desafío: distínguelo del indicativo "vienes".',
+    explanation_en: 'English Structural Parallel: "I hope [Matrix V] that [Complementizer] you come [Subjunctive V] soon". Note: Matrix verbs expressing wishes/desires require the Subjunctive ("vengas") in Spanish, whereas English uses the plain infinitive or subjunctive ("come").',
     words: [
       { id: 'w1', word: 'Espero', pos: 'V (Matriz)', slotId: 'slot-v1' },
       { id: 'w2', word: 'que', pos: 'COMP', slotId: 'slot-comp' },
@@ -296,6 +297,7 @@ const CHOMSKY_TREE_DATASETS = [
     title: 'Estructura Copulativa de Estado (Estar + Adj)',
     topic: 'Ser vs. Estar',
     explanation: 'El Sintagma Verbal (VP) copulativo contiene el verbo auxiliar de estado "está" seguido del Sintagma Adjetival "muy caliente". Desafío: contrástalo con el verbo identificativo "es".',
+    explanation_en: 'English Structural Parallel: "The coffee [NP] is [Copula/State] very hot [Adjective Phrase]". Note: English uses "is" for both identity and condition, but Spanish splits them: ESTAR for current state ("está caliente") vs SER for inherent identity ("es amargo").',
     words: [
       { id: 'w1', word: 'El', pos: 'DET', slotId: 'slot-det' },
       { id: 'w2', word: 'café', pos: 'N', slotId: 'slot-n' },
@@ -336,6 +338,7 @@ const CHOMSKY_TREE_DATASETS = [
     title: 'Transformación de Pronombres Dobles (Se + Lo)',
     topic: 'Pronombres Dobles (Apócope)',
     explanation: 'Estructura con apócope pronominal: el objeto indirecto "Le" se transforma en "Se" ante el objeto directo "lo" en el VP ("Se lo dije").',
+    explanation_en: 'English Structural Parallel: "I told [V] it [Direct Obj] to him [Indirect Obj]". Note: In English, pronouns follow the verb ("told it to him"). In Spanish, stacked pronouns precede the verb ("Se lo dije"). "Le lo" changes to "Se lo" to avoid repetitive "L" sounds.',
     words: [
       { id: 'w1', word: 'Se', pos: 'PRON (Indir)', slotId: 'slot-p1' },
       { id: 'w2', word: 'lo', pos: 'PRON (Dir)', slotId: 'slot-p2' },
@@ -367,6 +370,7 @@ const CHOMSKY_TREE_DATASETS = [
     title: 'Cláusula Adverbial Condicional Tica',
     topic: 'Conectores y Cláusulas',
     explanation: 'El conector de hipótesis "con tal de que" rige de forma obligatoria el modo Subjuntivo ("llamara" / "viniera").',
+    explanation_en: 'English Structural Parallel: "He said [Matrix] that he would come [Subordinate] provided that [Discourse Connector] he called [Subjunctive]". Note: Connectors of condition ("con tal de que") trigger mandatory Subjunctive in Spanish.',
     words: [
       { id: 'w1', word: 'Dijo', pos: 'V (Matriz)', slotId: 'slot-v1' },
       { id: 'w2', word: 'que', pos: 'COMP', slotId: 'slot-comp' },
@@ -498,6 +502,14 @@ function renderChomskyTreeActivity(container) {
         <p style="font-size:13px;color:var(--text-muted);line-height:1.5;margin-bottom:10px">
           ${currentDataset.explanation}
         </p>
+        <div style="background:rgba(13,148,136,0.1);border:1px solid rgba(13,148,136,0.3);border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:12px">
+          <div style="font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;margin-bottom:4px">
+            🇬🇧 English Structural Scaffolding & Parallel
+          </div>
+          <div style="font-size:12px;line-height:1.4">
+            ${currentDataset.explanation_en || 'English Scaffolding: Constituent breakdown — S (Sentence Root), VP (Verb Phrase), NP (Noun Phrase), CP (Complementizer Phrase).'}
+          </div>
+        </div>
         <div id="tree-validation-msg">
           ${isComplete ? `
             <div class="syntax-step" style="color:var(--success);font-weight:600">
@@ -644,9 +656,9 @@ function renderChomskyTreeActivity(container) {
 
 function renderPronounLab(container) {
   const examples = [
-    { base: 'Le di el informe a Carlos', io: 'le', do: 'el informe', target: 'Se lo di', explanation: 'Regla del "Se lo": Cuando el pronombre indirecto (le/les) precede al directo (lo/la/los/las), "le" se convierte automáticamente en "SE".' },
-    { base: 'Quiero enviar la carta a ustedes', io: 'les', do: 'la carta', target: 'Se la quiero enviar / Quiero enviársela', explanation: 'Posición variable: El bloque pronombral "se la" puede ir antes del verbo conjugado o adjunto al final del infinitivo ("enviársela").' },
-    { base: 'Está diciendo las noticias a María', io: 'le', do: 'las noticias', target: 'Se las está diciendo / Está diciéndoselas', explanation: 'Gerundio: Al adjuntar pronombres al gerundio, se añade tilde en la sílaba tónica ("diciéndoselas").' }
+    { base: 'Le di el informe a Carlos', io: 'le', do: 'el informe', target: 'Se lo di', explanation: 'Regla del "Se lo": Cuando el pronombre indirecto (le/les) precede al directo (lo/la/los/las), "le" se convierte automáticamente en "SE".', explanation_en: 'English Parallel: "I gave the report to Carlos" → "I gave IT to HIM". In Spanish, double object pronouns sit BEFORE the verb ("Se lo di"). "Le lo" becomes "Se lo" to prevent cacophony.' },
+    { base: 'Quiero enviar la carta a ustedes', io: 'les', do: 'la carta', target: 'Se la quiero enviar / Quiero enviársela', explanation: 'Posición variable: El bloque pronombral "se la" puede ir antes del verbo conjugado o adjunto al final del infinitivo ("enviársela").', explanation_en: 'English Parallel: "I want to send the letter to you all". In Spanish, the pronoun block "se la" can precede the conjugated verb ("Se la quiero enviar") OR attach to the infinitive ("Quiero enviársela").' },
+    { base: 'Está diciendo las noticias a María', io: 'le', do: 'las noticias', target: 'Se las está diciendo / Está diciéndoselas', explanation: 'Gerundio: Al adjuntar pronombres al gerundio, se añade tilde en la sílaba tónica ("diciéndoselas").', explanation_en: 'English Parallel: "He is telling the news to María" → "He is telling IT to HER". Attached to progressive gerunds ("diciéndoselas"), an accent mark is mandatory on the stressed vowel.' }
   ];
 
   let currentIdx = 0;
@@ -678,7 +690,11 @@ function renderPronounLab(container) {
 
         <div class="syntax-analysis-bar" style="margin-top:12px">
           <div style="font-weight:700;font-size:13px;margin-bottom:4px">📌 Explicación de la Transformación</div>
-          <div style="font-size:13px;color:var(--text-muted);line-height:1.5">${ex.explanation}</div>
+          <div style="font-size:13px;color:var(--text-muted);line-height:1.5;margin-bottom:8px">${ex.explanation}</div>
+
+          <div style="background:rgba(13,148,136,0.1);border:1px solid rgba(13,148,136,0.3);border-radius:6px;padding:8px 10px;font-size:12px;color:var(--text)">
+            🇬🇧 <strong>English Scaffolding:</strong> ${ex.explanation_en}
+          </div>
         </div>
       </div>
 
@@ -710,6 +726,7 @@ function renderTicoRegisterTransformer(container) {
       usted: '¿De verdad va a ir a la fiesta usted?',
       vos: '¿De verdad vas a ir a la fiesta vos?',
       tico: '¿Al chile va a ir a la fiesta?',
+      en: 'Are you really going to the party? (Tico idiom: "For real / Seriously going?")',
       notes: 'En Costa Rica el trato formal "Usted" se usa cotidianamente entre amigos y vecinos. "¡Al chile!" es la expresión autóctona tica para "¿De verdad?".'
     },
     {
@@ -717,6 +734,7 @@ function renderTicoRegisterTransformer(container) {
       usted: 'Muchas gracias por su ayuda.',
       vos: 'Muchas gracias por tu ayuda.',
       tico: '¡Con mucho gusto! / ¡Con gusto!',
+      en: 'Thank you very much for your help. (Tico response: "My pleasure! / With pleasure!")',
       notes: 'La respuesta de cortesía por excelencia en Costa Rica es "¡Con gusto!" en lugar de "De nada".'
     },
     {
@@ -724,6 +742,7 @@ function renderTicoRegisterTransformer(container) {
       usted: 'Venga aquí y mire esto. (Imperativo Usted)',
       vos: 'Vení aquí y mirá esto. (Imperativo Vos)',
       tico: 'Pase adelante y mire (Trato respetuoso cotidiano)',
+      en: 'Come here and look at this. (Tico polite: "Step right forward and look.")',
       notes: 'El imperativo con Vos acentúa la última sílaba: vení, mirá, decí, hacé.'
     }
   ];
@@ -741,6 +760,9 @@ function renderTicoRegisterTransformer(container) {
       </div>
 
       <div class="tico-register-card">
+        <div style="font-size:12px;color:var(--accent);font-weight:700;margin-bottom:8px">
+          🇬🇧 English Translation: "${item.en}"
+        </div>
         <div style="margin-bottom:10px">
           <span class="register-tag tag-standard">Estándar (B1)</span>
           <div style="font-size:15px;font-weight:600;margin-top:4px">${item.standard}</div>
@@ -790,11 +812,11 @@ function renderTicoRegisterTransformer(container) {
 
 function renderConectoresVisualizer(container) {
   const connectors = [
-    { word: 'a no ser que / a menos que', mode: 'Subjuntivo', type: 'subjunctive', example: 'Iremos a la playa **a no ser que llueva**.' },
-    { word: 'con tal de que', mode: 'Subjuntivo', type: 'subjunctive', example: 'Te presto el libro **con tal de que me lo devuelvas** pronto.' },
-    { word: 'puesto que / ya que / dado que', mode: 'Indicativo', type: 'indicative', example: 'No salimos **ya que estaba** lloviendo fuerte.' },
-    { word: 'por lo tanto', mode: 'Indicativo', type: 'indicative', example: 'Estudió mucho; **por lo tanto, aprobó** el examen.' },
-    { word: 'cuando / en cuanto / hasta que', mode: 'Variable (Tiempo)', type: 'variable', example: 'Llámame **en cuanto llegues** (futuro = subjuntivo) vs. Siempre me llama **en cuanto llega** (rutina = indicativo).' }
+    { word: 'a no ser que / a menos que', mode: 'Subjuntivo', type: 'subjunctive', en: 'unless', example: 'Iremos a la playa **a no ser que llueva**.' },
+    { word: 'con tal de que', mode: 'Subjuntivo', type: 'subjunctive', en: 'provided that / as long as', example: 'Te presto el libro **con tal de que me lo devuelvas** pronto.' },
+    { word: 'puesto que / ya que / dado que', mode: 'Indicativo', type: 'indicative', en: 'since / given that', example: 'No salimos **ya que estaba** lloviendo fuerte.' },
+    { word: 'por lo tanto', mode: 'Indicativo', type: 'indicative', en: 'therefore / consequently', example: 'Estudió mucho; **por lo tanto, aprobó** el examen.' },
+    { word: 'cuando / en cuanto / hasta que', mode: 'Variable (Tiempo)', type: 'variable', en: 'when / as soon as / until', example: 'Llámame **en cuanto llegues** (futuro = subjuntivo) vs. Siempre me llama **en cuanto llega** (rutina = indicativo).' }
   ];
 
   container.innerHTML = `
@@ -812,6 +834,7 @@ function renderConectoresVisualizer(container) {
             <span class="connector-badge connector-${c.type}">${c.word}</span>
             <span style="font-size:11px;font-weight:700;color:var(--text-muted)">Modo: ${c.mode}</span>
           </div>
+          <div style="font-size:12px;color:var(--accent);font-weight:600;margin-bottom:4px">🇬🇧 English: "${c.en}"</div>
           <div style="font-size:14px;line-height:1.5;margin-top:4px">${grammarMdBold(c.example)}</div>
         </div>
       `).join('')}
@@ -855,6 +878,17 @@ function renderGrammarLessonDetail(container, lesson, { onBack, onPractice, onOp
     <div class="card" style="margin-bottom:12px">
       ${paragraphs(lesson.explanation_es)}
     </div>
+
+    ${lesson.explanation_en ? `
+      <div style="background:rgba(13,148,136,0.1);border:1px solid rgba(13,148,136,0.3);border-radius:var(--radius);padding:14px 16px;margin-bottom:16px">
+        <div style="font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;margin-bottom:4px">
+          🇬🇧 English Structural & Concept Scaffolding
+        </div>
+        <div style="font-size:13px;line-height:1.5">
+          ${lesson.explanation_en}
+        </div>
+      </div>
+    ` : ''}
 
     <div style="display:flex;gap:10px;margin-top:20px">
       <button class="btn btn-secondary" id="l-tree-btn" style="flex:1">🌳 Ver Árbol Sintáctico</button>

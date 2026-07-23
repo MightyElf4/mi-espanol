@@ -91,6 +91,14 @@ async function renderAnalysisModule(container) {
     ];
   }
 
+  const TOPIC_EN_MAP = {
+    'Subjuntivo — Deseos y Dudas': 'Subjunctive Mood — Wishes & Doubts',
+    'Subjuntivo (Duda / Deseo)': 'Subjunctive Mood — Wishes & Doubts',
+    'Ser vs. Estar': 'Ser vs. Estar (Inherent Essence vs. Current State)',
+    'Por vs. Para': 'Por vs. Para (Cause/Means vs. Goal/Recipient)',
+    'Pronombres Dobles (Se lo)': 'Double Pronouns (Indirect + Direct Object Stacking)'
+  };
+
   container.innerHTML = `
     <div class="page-header">
       <h2 style="font-size:20px;font-weight:800">Análisis de Desempeño</h2>
@@ -99,11 +107,14 @@ async function renderAnalysisModule(container) {
     <!-- Weak Area Spotlight Alert -->
     ${weakestTopic ? `
       <div style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3);border-left:4px solid #ef4444;border-radius:var(--radius);padding:16px;margin-bottom:20px">
-        <div style="font-weight:700;font-size:14px;color:#fca5a5;display:flex;align-items:center;gap:6px;margin-bottom:6px">
+        <div style="font-weight:700;font-size:14px;color:#fca5a5;display:flex;align-items:center;gap:6px;margin-bottom:4px">
           ⚠️ Área Crítica Identificada
         </div>
-        <div style="font-size:13px;color:#fecaca;line-height:1.4">
+        <div style="font-size:13px;color:#fecaca;line-height:1.4;margin-bottom:6px">
           Tu precisión en <strong>${weakestTopic.topic}</strong> está en <strong>${weakestTopic.accuracy}%</strong>. Te recomendamos repasar esta regla hoy.
+        </div>
+        <div style="font-size:11px;color:var(--accent);font-weight:600">
+          🇬🇧 English Concept: ${TOPIC_EN_MAP[weakestTopic.topic] || weakestTopic.topic}
         </div>
       </div>
     ` : ''}
@@ -118,13 +129,15 @@ async function renderAnalysisModule(container) {
         let colorClass = '#10b981';
         if (item.accuracy < 70) colorClass = '#ef4444';
         else if (item.accuracy < 85) colorClass = '#f59e0b';
+        const enLabel = TOPIC_EN_MAP[item.topic];
 
         return `
           <div style="margin-bottom:14px">
-            <div style="display:flex;justify-space-between;font-size:13px;font-weight:600;margin-bottom:6px">
+            <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:2px">
               <span>${item.topic}</span>
               <span style="color:${colorClass};font-weight:700;margin-left:auto">${item.accuracy}%</span>
             </div>
+            ${enLabel ? `<div style="font-size:11px;color:var(--text-muted);margin-bottom:6px">🇬🇧 ${enLabel}</div>` : ''}
             <div style="height:10px;background:rgba(255,255,255,0.06);border-radius:6px;overflow:hidden">
               <div style="height:100%;width:${item.accuracy}%;background:${colorClass};border-radius:6px"></div>
             </div>
