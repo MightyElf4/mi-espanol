@@ -244,3 +244,170 @@ input, textarea { font: inherit; }
   margin-top: 4px;
 }
 
+/* Nav Item Adjustments for 8 Items */
+#bottom-nav {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  justify-content: space-around;
+  gap: 2px;
+}
+.nav-item {
+  min-width: 50px;
+  padding: 6px 4px;
+  font-size: 9px;
+  flex-shrink: 0;
+}
+.nav-item svg { width: 18px; height: 18px; }
+
+/* ── C2 Fluency Ladder ────────────────────────────────────────────────── */
+.ladder-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  margin-bottom: 16px;
+}
+.ladder-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+}
+.ladder-steps {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  margin: 20px 0 14px;
+}
+.ladder-line {
+  position: absolute;
+  top: 14px;
+  left: 12%;
+  right: 12%;
+  height: 4px;
+  background: var(--border);
+  z-index: 1;
+}
+.ladder-line-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40%;
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+}
+.step-node {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.node-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+.step-node.completed .node-circle {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.step-node.active .node-circle {
+  background: #8b5cf6;
+  border-color: #a78bfa;
+  color: #fff;
+  transform: scale(1.1);
+}
+.node-label { font-size: 10px; font-weight: 600; color: var(--text-muted); }
+.step-node.active .node-label { color: #a78bfa; font-weight: 700; }
+
+.marker-box {
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px dashed rgba(139, 92, 246, 0.3);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+
+/* ── Weekly Sparkline Bars ───────────────────────────────────────────── */
+.activity-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.activity-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.bars-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 65px;
+  padding-top: 6px;
+}
+.bar-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+}
+.bar-fill {
+  width: 12px;
+  background: var(--accent);
+  border-radius: 4px;
+  min-height: 4px;
+}
+.bar-day { font-size: 10px; color: var(--text-muted); font-weight: 600; }
+
+/* ── Thumb-Zone Vocab Controls ────────────────────────────────────────── */
+.thumb-controls {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 16px;
+}
+.srs-thumb-btn {
+  padding: 12px 4px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-surface-2);
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  transition: transform 0.1s;
+}
+.srs-thumb-btn:active { transform: scale(0.95); }
+.srs-thumb-btn.again { background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.4); color: #fca5a5; }
+.srs-thumb-btn.hard { background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.4); color: #fcd34d; }
+.srs-thumb-btn.good { background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.4); color: #86efac; }
+.srs-thumb-btn.easy { background: rgba(59, 130, 246, 0.15); border-color: rgba(59, 130, 246, 0.4); color: #93c5fd; }
+
+

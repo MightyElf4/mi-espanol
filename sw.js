@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mi-espanol-v10';
+const CACHE_NAME = 'mi-espanol-v11';
 const BASE = location.pathname.startsWith('/mi-espanol') ? '/mi-espanol' : '';
 const SHELL_FILES = [
   BASE + '/',
@@ -26,6 +26,8 @@ const SHELL_FILES = [
   BASE + '/js/modules/reading.js',
   BASE + '/js/modules/speaking.js',
   BASE + '/js/modules/dashboard.js',
+  BASE + '/js/modules/analysis.js',
+  BASE + '/js/modules/phonology.js',
 ];
 
 self.addEventListener('install', event => {
