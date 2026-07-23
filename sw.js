@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mi-espanol-v8';
+const CACHE_NAME = 'mi-espanol-v9';
 const BASE = location.pathname.startsWith('/mi-espanol') ? '/mi-espanol' : '';
 const SHELL_FILES = [
   BASE + '/',
@@ -7,8 +7,8 @@ const SHELL_FILES = [
   BASE + '/css/main.css',
   BASE + '/css/modules/vocab.css',
   BASE + '/css/modules/grammar.css',
-  BASE + '/images/dashboard_hero.jpg',
-  BASE + '/images/grammar_hero.jpg',
+  BASE + '/images/dashboard_hero_v2.jpg',
+  BASE + '/images/grammar_hero_v2.jpg',
   BASE + '/js/config.js',
   BASE + '/js/supabase.js',
   BASE + '/js/srs.js',

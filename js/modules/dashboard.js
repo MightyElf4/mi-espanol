@@ -37,7 +37,7 @@ async function renderDashboard(container) {
 
   container.innerHTML = `
     <div class="hero-banner">
-      <img src="images/dashboard_hero.jpg" alt="Guanacaste Costa Rica">
+      <img src="images/dashboard_hero_v2.jpg?v=2" alt="Guanacaste Costa Rica">
       <div class="hero-overlay">
         <div class="hero-title">Mi Español</div>
         <div class="hero-subtitle">Hojancha, Costa Rica · Nivel B1 → B2/C1</div>

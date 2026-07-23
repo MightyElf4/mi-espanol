@@ -810,7 +810,7 @@ async function renderGrammarModule(container, defaultTab = 'tree') {
 
   container.innerHTML = `
     <div class="hero-banner">
-      <img src="images/grammar_hero.jpg" alt="Estructura Sintáctica">
+      <img src="images/grammar_hero_v2.jpg?v=2" alt="Estructura Sintáctica">
       <div class="hero-overlay">
         <div class="hero-title">Gramática y Estructura</div>
         <div class="hero-subtitle">Árboles Sintácticos, Pronombres y Pragmática Tica</div>
